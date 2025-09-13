@@ -1,0 +1,75 @@
+/* ===============================
+   AyuRaksha - Nearby Pharmacies
+   =============================== */
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(to right, #e8fdf0, #f9fffb);
+  margin: 0;
+  padding: 0;
+}
+
+.nearby-container {
+  width: 90%;
+  max-width: 600px;
+  margin: 50px auto;
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 14px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+h2 {
+  color: #218838;
+  margin-bottom: 20px;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-group {
+  text-align: left;
+}
+
+label {
+  font-weight: 600;
+  color: #218838;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  outline: none;
+  font-size: 15px;
+  margin-top: 5px;
+  transition: 0.3s;
+}
+
+input:focus {
+  border-color: #28a745;
+  box-shadow: 0 0 6px rgba(40, 167, 69, 0.4);
+}
+
+.submit-btn {
+  padding: 12px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+}
+
+.submit-btn:hover {
+  background: #218838;
+}
