@@ -7,34 +7,43 @@
   <title>AyuRaksha - Dashboard</title>
   <link rel="stylesheet" href="home.css">
 </head>
+<a href="http://127.0.0.1:5000/" target="_blank" class="pill-chat" title="Open Chatbot">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+    <path d="M7.5 2.5a5 5 0 0 0-7 7l14 14a5 5 0 0 0 7-7l-14-14z" fill="white" />
+    <path d="M4 10l10 10" stroke="#0ea5a4" stroke-width="2" />
+  </svg>
+  <span>Chat</span>
+</a>
 
 <body>
   <!-- Add this inside <head> if Tailwind not already included -->
-<script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
 
-<style>
-  .pill-chat {
-    position: fixed;
-    right: 20px;
-    bottom: 20px;
-    padding: 12px 20px;
-    border-radius: 9999px;
-    background: linear-gradient(90deg, #06b6d4, #0ea5a4);
-    color: white;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.18);
-    transition: transform .15s ease, box-shadow .2s ease;
-    z-index: 1000;
-  }
-  .pill-chat:hover {
-    transform: scale(1.05);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.22);
-  }
-</style>
+  <style>
+    .pill-chat {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      padding: 12px 20px;
+      border-radius: 9999px;
+      background: linear-gradient(90deg, #06b6d4, #0ea5a4);
+      color: white;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+      transition: transform .15s ease, box-shadow .2s ease;
+      z-index: 1000;
+    }
+
+    .pill-chat:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.22);
+    }
+  </style>
+
 
   <div class="container">
     <!-- Sidebar -->
@@ -44,15 +53,15 @@
         <li><a href="profile.html">Profile</a></li>
         <li><a href="donate.html">Donate</a></li>
 
-        
-        
+
+
         <li><a href="request.html">Request</a></li>
         <li><a href="available.html">Available Medicines</a></li>
-    
+
         <li><a href="nearby.html">Add Pharmacies</a></li>
         <li><a href="creq.html">Current Requests</a></li>
         <li><a href="pharm.html">Naerby Pharmacies</a></li>
-        <li><a href="http://127.0.0.1:5000/" target="_blank">Identify the Pill</a></li>
+
       </ul>
     </aside>
 
