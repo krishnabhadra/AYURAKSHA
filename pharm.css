@@ -1,0 +1,65 @@
+/* General Page Styling */
+body {
+  background-color: #f9fafb; /* light gray */
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+}
+
+/* Container */
+.container {
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 700px;
+}
+
+/* Heading */
+.container h1 {
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #0d9488; /* teal shade */
+  margin-bottom: 1.5rem;
+}
+
+/* Pharmacy Card */
+.pharmacy-card {
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.pharmacy-card:hover {
+  background: #e0f2f1; /* light teal on hover */
+  transform: translateY(-3px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+}
+
+.pharmacy-card h2 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #115e59; /* darker teal */
+  margin-bottom: 0.5rem;
+}
+
+.pharmacy-card p {
+  margin: 0.2rem 0;
+  color: #374151; /* gray-700 */
+}
+
+/* No Data Text */
+.no-data {
+  text-align: center;
+  font-size: 1rem;
+  color: #6b7280; /* gray-500 */
+  margin-top: 2rem;
+}
