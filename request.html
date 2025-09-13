@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Medicine Request - AyuRaksha</title>
+  <link rel="stylesheet" href="request.css">
+  
+  <!-- Firebase SDKs -->
+  <script type="module">
+    // Import Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+    // 🔹 Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyBNtALT9E9wJWua8SHD16bxiom_UXnnZpU",
+      authDomain: "ayuraksha-467a7.firebaseapp.com",
+      projectId: "ayuraksha-467a7",
+      storageBucket: "ayuraksha-467a7.firebasestorage.app",
+      messagingSenderId: "183036095329",
+      appId: "1:183036095329:web:38130dd1cf348703ef3320"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Handle Form Submission
+    window.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("requestForm");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const medicine = document.getElementById("medicine").value;
+        const address = document.getElementById("address").value;
+        const date = document.getElementById("date").value;
+        const reason = document.getElementById("reason").value;
+        const quantity = document.getElementById("quantity").value;
+        const phone = document.getElementById("phone").value;
+        const urgency = document.querySelector('input[name="urgency"]:checked').value;
+
+        try {
+          await addDoc(collection(db, "requests"), {
+            medicine,
+            address,
+            date,
+            reason,
+            quantity: parseInt(quantity),
+            phone,
+            urgency,
+            createdAt: serverTimestamp()
+          });
+
+          alert("✅ Request submitted successfully!");
+          form.reset();
+        } catch (error) {
+          console.error("Error adding request: ", error);
+          alert("❌ Failed to submit request. Please try again.");
+        }
+      });
+    });
+  </script>
+</head>
+<body>
+  <div class="request-container">
+    <h2>Request Medicine</h2>
+    <form id="requestForm">
+      <div class="form-group">
+        <label for="medicine">Name of Medicine</label>
+        <input type="text" id="medicine" placeholder="Enter medicine name" required>
+      </div>
+
+      <div class="form-group">
+        <label for="address">Address</label>
+        <textarea id="address" rows="3" placeholder="Enter your address" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="date">Date</label>
+        <input type="date" id="date" required>
+      </div>
+
+      <div class="form-group">
+        <label for="reason">Reason</label>
+        <textarea id="reason" rows="3" placeholder="Enter reason for request" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="quantity">Quantity</label>
+        <input type="number" id="quantity" placeholder="Enter quantity" min="1" required>
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" placeholder="Enter your phone number" pattern="[0-9]{10}" required>
+      </div>
+
+      <div class="form-group">
+        <label>Urgency</label>
+        <div class="urgency-options">
+          <label><input type="radio" name="urgency" value="very-urgent" required> Very Urgent</label>
+          <label><input type="radio" name="urgency" value="mild"> Mild</label>
+          <label><input type="radio" name="urgency" value="not-urgent"> Not Urgent</label>
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn">Submit Request</button>
+    </form>
+  </div>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Available Medicines - AyuRaksha</title>
+  <link rel="stylesheet" href="available.css">
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    // ✅ Replace with your Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyBNtALT9E9wJWua8SHD16bxiom_UXnnZpU",
+      authDomain: "ayuraksha-467a7.firebaseapp.com",
+      projectId: "ayuraksha-467a7",
+      storageBucket: "ayuraksha-467a7.firebasestorage.app",
+      messagingSenderId: "183036095329",
+      appId: "1:183036095329:web:38130dd1cf348703ef3320"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    async function loadMedicines() {
+      const querySnapshot = await getDocs(collection(db, "donations"));
+      let medicines = [];
+      querySnapshot.forEach((doc) => {
+        medicines.push(doc.data());
+      });
+
+      renderTable(medicines);
+
+      // search functionality
+      document.getElementById("searchInput").addEventListener("input", function () {
+        const searchValue = this.value.toLowerCase();
+        const filtered = medicines.filter(med =>
+          med.name.toLowerCase().includes(searchValue) ||
+          med.phone.toLowerCase().includes(searchValue)
+        );
+        renderTable(filtered);
+      });
+
+      // sorting functionality
+      document.getElementById("sortSelect").addEventListener("change", function () {
+        const sortBy = this.value;
+        let sorted = [...medicines];
+        if (sortBy === "name") {
+          sorted.sort((a, b) => a.name.localeCompare(b.name));
+        } else if (sortBy === "expiry") {
+          sorted.sort((a, b) => new Date(a.expiry) - new Date(b.expiry));
+        } else if (sortBy === "quantity") {
+          sorted.sort((a, b) => a.quantity - b.quantity);
+        }
+        renderTable(sorted);
+      });
+    }
+
+    function renderTable(medicines) {
+      const tableBody = document.getElementById("medicineTableBody");
+      tableBody.innerHTML = "";
+
+      const today = new Date();
+
+      medicines.forEach(med => {
+        const expiryDate = new Date(med.expiry);
+        const diffTime = expiryDate - today;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        const row = document.createElement("tr");
+
+        if (diffDays <= 30) {
+          row.classList.add("expiring-soon");
+        }
+
+        row.innerHTML = `
+          <td>${med.name}</td>
+          <td>${med.dosage}</td>
+          <td>${med.quantity}</td>
+          <td>${med.expiry}</td>
+          <td>${med.phone}</td>
+        `;
+
+        tableBody.appendChild(row);
+      });
+    }
+
+    window.onload = loadMedicines;
+  </script>
+</head>
+<body>
+  <div class="available-container">
+    <h2>Available Medicines</h2>
+
+    <div class="controls">
+      <input type="text" id="searchInput" placeholder="🔍 Search by name or phone">
+      <select id="sortSelect">
+        <option value="">Sort By</option>
+        <option value="name">Name</option>
+        <option value="expiry">Expiry Date</option>
+        <option value="quantity">Quantity</option>
+      </select>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Dosage</th>
+          <th>Quantity</th>
+          <th>Expiry Date</th>
+          <th>Phone</th>
+        </tr>
+      </thead>
+      <tbody id="medicineTableBody">
+        <!-- Data from Firestore will appear here -->
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

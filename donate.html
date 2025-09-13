@@ -35,6 +35,7 @@
       const expiry = document.getElementById("expiryDate").value;
       const dosage = document.getElementById("dosage").value;
       const quantity = document.getElementById("quantity").value;
+      const phone = document.getElementById("phoneNumber").value;
       const photoFile = document.getElementById("photo").files[0];
 
       let photoURL = "";
@@ -51,6 +52,7 @@
           expiry,
           dosage,
           quantity,
+          phone,
           photoURL,
           timestamp: new Date()
         });
@@ -73,6 +75,7 @@
       <input type="date" id="expiryDate" required>
       <input type="text" id="dosage" placeholder="Dosage (e.g. 500mg)" required>
       <input type="number" id="quantity" placeholder="Quantity" required>
+      <input type="tel" id="phoneNumber" placeholder="Phone Number" pattern="[0-9]{10}" maxlength="10" required>
       <input type="file" id="photo" accept="image/*">
       <button type="submit">Donate</button>
     </form>
