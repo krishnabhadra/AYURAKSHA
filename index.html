@@ -1,43 +1,142 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AyuRaksha - Medical Expiry Tracker</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Medicine Chatbot</title>
   <style>
-    body { font-family: 'Inter', sans-serif; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 30px;
+      background: #ffffff;
+      color: #003d3d;
+    }
+
+    h1 {
+      color: #009999;
+      text-align: center;
+      font-weight: 500;
+      margin-bottom: 20px;
+    }
+
+    .chatbox {
+      border: 1px solid #00b3b3;
+      padding: 12px;
+      max-width: 500px;
+      height: 400px;
+      overflow-y: auto;
+      margin: 20px auto;
+      background: #f9fdfd;
+      border-radius: 8px;
+    }
+
+    .chatbox p {
+      padding: 8px 12px;
+      border-radius: 6px;
+      margin: 6px 0;
+      max-width: 85%;
+      line-height: 1.4em;
+      font-size: 14px;
+    }
+
+    .user {
+      background: #e0f7f7;
+      color: #006666;
+      text-align: right;
+      margin-left: auto;
+    }
+
+    .bot {
+      background: #ffffff;
+      color: #003d3d;
+      border-left: 3px solid #00b3b3;
+      text-align: left;
+      margin-right: auto;
+    }
+
+    /* --- Center input + button --- */
+    .input-container {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    input,
+    button {
+      padding: 10px 15px;
+      margin: 8px 5px;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: 0.2s ease;
+    }
+
+    input {
+      width: 250px;
+      border: 1px solid #00b3b3;
+      background: #ffffff;
+      color: #003d3d;
+    }
+
+    input::placeholder {
+      color: #66b2b2;
+    }
+
+    button {
+      background: #00b3b3;
+      color: #ffffff;
+      border: none;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #009999;
+    }
   </style>
 </head>
-<body class="bg-white text-gray-800">
 
-  <!-- Header -->
-  <header class="bg-white shadow-sm">
-    <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-      <h1 class="text-2xl font-bold text-teal-600">AyuRaksha</h1>
-      <a href="login.html" 
-         class="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-6 rounded-lg transition">
-        Login
-      </a>
-    </div>
-  </header>
+<body>
+  <h1>Medicine Information Chatbot</h1>
+  <div class="chatbox" id="chatbox"></div>
 
-  <!-- Hero Section -->
-  <main class="flex items-center justify-center min-h-[calc(100vh-80px)] text-center px-6">
-    <div class="max-w-2xl">
-      <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-        Never Miss a Medical Expiry Date Again.
-      </h2>
-      <p class="text-lg text-gray-600 mb-8">
-        Track your medicines, get expiry reminders, and keep your health products safe with AyuRaksha.
-      </p>
-      <a href="signup.html" 
-         class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-4 px-10 rounded-lg text-lg transition shadow-lg">
-        Get Started
-      </a>
-    </div>
-  </main>
+  <div class="input-container">
+    <input type="text" id="drug_name" placeholder="Enter medicine name">
+    <button onclick="send()">Search</button>
+  </div>
 
+  <script>
+    function send() {
+      const drug = document.getElementById("drug_name").value;
+      if (!drug) return;
+
+      const chatbox = document.getElementById("chatbox");
+      chatbox.innerHTML += `<p class="user">You: ${drug}</p>`;
+
+      fetch('/get_medicine', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `drug_name=${drug}`
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            chatbox.innerHTML += `<p class="bot">Bot: ${data.error}</p>`;
+          } else {
+            chatbox.innerHTML += `<p class="bot">
+                        <strong>Uses:</strong> ${data.Uses}<br>
+                        <strong>Dosage:</strong> ${data.Dosage}<br>
+                        <strong>Side Effects:</strong> ${data.Side_Effects}
+                    </p>`;
+          }
+          chatbox.scrollTop = chatbox.scrollHeight;
+        });
+
+      document.getElementById("drug_name").value = '';
+    }
+  </script>
 </body>
+<<<<<<< HEAD
 </html>
 
+=======
+
+</html>
+>>>>>>> a64e026867d93145580c882f41cfe91403b4b3b1
