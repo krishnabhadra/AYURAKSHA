@@ -1,0 +1,80 @@
+/* =========================
+   AyuRaksha - Current Requests
+   ========================= */
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(to right, #dfffe0, #f6fff7);
+  margin: 0;
+  padding: 0;
+}
+
+.creq-container {
+  width: 95%;
+  max-width: 1200px;
+  margin: 40px auto;
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 14px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  text-align: center;
+  color: #218838;
+  margin-bottom: 20px;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background: #218838;
+  color: white;
+}
+
+thead th {
+  padding: 12px;
+  text-align: left;
+  font-size: 15px;
+}
+
+tbody td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  font-size: 14px;
+}
+
+tr:hover {
+  background: #f9fff9;
+}
+
+.urgency {
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.urgency.very-urgent {
+  background: #ffcccc;
+  color: #a10000;
+}
+
+.urgency.mild {
+  background: #fff7cc;
+  color: #997a00;
+}
+
+.urgency.not-urgent {
+  background: #ccffcc;
+  color: #006600;
+}

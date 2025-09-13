@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nearby Pharmacies - AyuRaksha</title>
+  <link rel="stylesheet" href="nearby.css">
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+    // 🔹 Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyBNtALT9E9wJWua8SHD16bxiom_UXnnZpU",
+      authDomain: "ayuraksha-467a7.firebaseapp.com",
+      projectId: "ayuraksha-467a7",
+      storageBucket: "ayuraksha-467a7.firebasestorage.app",
+      messagingSenderId: "183036095329",
+      appId: "1:183036095329:web:38130dd1cf348703ef3320"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Handle Form Submit
+    window.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("pharmacyForm");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const name = document.getElementById("pharmacyName").value;
+        const place = document.getElementById("place").value;
+        const phone = document.getElementById("phone").value;
+
+        try {
+          await addDoc(collection(db, "pharmacies"), {
+            name,
+            place,
+            phone,
+            createdAt: serverTimestamp()
+          });
+
+          alert("✅ Pharmacy added successfully!");
+          form.reset();
+        } catch (error) {
+          console.error("Error adding pharmacy:", error);
+          alert("❌ Failed to add pharmacy. Try again.");
+        }
+      });
+    });
+  </script>
+</head>
+<body>
+  <div class="nearby-container">
+    <h2>Add Nearby Pharmacy</h2>
+    <form id="pharmacyForm">
+      <div class="form-group">
+        <label for="pharmacyName">Pharmacy Name</label>
+        <input type="text" id="pharmacyName" placeholder="Enter pharmacy name" required>
+      </div>
+
+      <div class="form-group">
+        <label for="place">Exact Place</label>
+        <input type="text" id="place" placeholder="Enter location" required>
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" placeholder="Enter phone number" pattern="[0-9]{10}" required>
+      </div>
+
+      <button type="submit" class="submit-btn">Add Pharmacy</button>
+    </form>
+  </div>
+</body>
+</html>

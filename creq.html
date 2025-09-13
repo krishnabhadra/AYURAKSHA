@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Current Requests - AyuRaksha</title>
+  <link rel="stylesheet" href="creq.css">
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+    // 🔹 Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyBNtALT9E9wJWua8SHD16bxiom_UXnnZpU",
+      authDomain: "ayuraksha-467a7.firebaseapp.com",
+      projectId: "ayuraksha-467a7",
+      storageBucket: "ayuraksha-467a7.firebasestorage.app",
+      messagingSenderId: "183036095329",
+      appId: "1:183036095329:web:38130dd1cf348703ef3320"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Load requests from Firestore
+    async function loadRequests() {
+      const requestsTable = document.getElementById("requestsTableBody");
+      requestsTable.innerHTML = "";
+
+      const q = query(collection(db, "requests"), orderBy("createdAt", "desc"));
+      const snapshot = await getDocs(q);
+
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${data.medicine}</td>
+          <td>${data.quantity}</td>
+          <td>${data.address}</td>
+          <td>${data.phone}</td>
+          <td>${data.date}</td>
+          <td>${data.reason}</td>
+          <td><span class="urgency ${data.urgency}">${data.urgency.replace("-", " ")}</span></td>
+        `;
+
+        requestsTable.appendChild(row);
+      });
+    }
+
+    window.addEventListener("DOMContentLoaded", loadRequests);
+  </script>
+</head>
+<body>
+  <div class="creq-container">
+    <h2>📋 Current Medicine Requests</h2>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Medicine</th>
+            <th>Quantity</th>
+            <th>Address</th>
+            <th>Phone</th>
+            <th>Date</th>
+            <th>Reason</th>
+            <th>Urgency</th>
+          </tr>
+        </thead>
+        <tbody id="requestsTableBody">
+          <!-- Filled dynamically -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>
