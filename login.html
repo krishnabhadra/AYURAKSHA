@@ -3,18 +3,63 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - Medicine Tracker</title>
+  <title>Login - AyuRaksha</title>
   <link rel="stylesheet" href="login.css">
+  <!-- Tailwind optional, if you want -->
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <div class="login-container">
-    <h2>Login</h2>
-    <form action="dashboard.html" method="post">
-      <input type="text" name="username" placeholder="Enter Username" required>
-      <input type="password" name="password" placeholder="Enter Password" required>
-      <button type="submit">Login</button>
+<body class="bg-gray-50 flex items-center justify-center min-h-screen">
+
+  <div class="bg-white shadow-lg rounded-lg w-full max-w-md p-8">
+    <h2 class="text-2xl font-bold text-center text-teal-600 mb-6">Login</h2>
+    
+    <form id="loginForm" class="space-y-4">
+      <input id="email" type="email" placeholder="Enter Email" class="w-full border p-3 rounded-lg" required>
+      <input id="password" type="password" placeholder="Enter Password" class="w-full border p-3 rounded-lg" required>
+      <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 rounded-lg transition">
+        Login
+      </button>
     </form>
-    <p>New here? <a href="signup.html">Register here</a></p>
+
+    <p class="mt-4 text-center">New here? <a href="signup.html" class="text-teal-600 font-semibold">Register here</a></p>
   </div>
+
+  <!-- Firebase SDK v8 -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+  <script>
+    // 🔹 Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyBNtALT9E9wJWua8SHD16bxiom_UXnnZpU",
+      authDomain: "ayuraksha-467a7.firebaseapp.com",
+      projectId: "ayuraksha-467a7",
+      storageBucket: "ayuraksha-467a7.firebasestorage.app",
+      messagingSenderId: "183036095329",
+      appId: "1:183036095329:web:38130dd1cf348703ef3320"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    const loginForm = document.getElementById("loginForm");
+
+    loginForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      auth.signInWithEmailAndPassword(email, password)
+        .then(userCred => {
+          alert("Login successful!");
+          // Redirect to dashboard page
+          window.location.href = "home.html";
+        })
+        .catch(err => {
+          alert("Login failed: " + err.message);
+        });
+    });
+  </script>
 </body>
 </html>

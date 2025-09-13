@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile - AyuRaksha</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center">
+
+  <div class="bg-white shadow-lg rounded-lg w-full max-w-2xl p-8">
+    <h1 class="text-2xl font-bold text-teal-600 mb-6 text-center">Your Profile</h1>
+    
+    <div id="profileContainer" class="space-y-4">
+      <p><strong>Name:</strong> <span id="name">Loading...</span></p>
+      <p id="dobField"><strong>Date of Birth:</strong> <span id="dob">Loading...</span></p>
+      <p><strong>State:</strong> <span id="state">Loading...</span></p>
+      <p><strong>District:</strong> <span id="district">Loading...</span></p>
+      <p><strong>Locality:</strong> <span id="locality">Loading...</span></p>
+      <p><strong>Email:</strong> <span id="email">Loading...</span></p>
+      <p id="regNumberField"><strong>Registration Number:</strong> <span id="regNumber">Loading...</span></p>
+      <p id="pharmacyNameField"><strong>Pharmacy Name:</strong> <span id="pharmacyName">Loading...</span></p>
+    </div>
+
+    <div class="mt-6 text-center">
+      <button id="logoutBtn" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-6 rounded-lg transition">
+        Logout
+      </button>
+    </div>
+  </div>
+
+  <!-- Firebase SDK v8 -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+  <script>
+    // Firebase config
+     const firebaseConfig = {
+      apiKey: "AIzaSyBNtALT9E9wJWua8SHD16bxiom_UXnnZpU",
+      authDomain: "ayuraksha-467a7.firebaseapp.com",
+      projectId: "ayuraksha-467a7",
+      storageBucket: "ayuraksha-467a7.firebasestorage.app",
+      messagingSenderId: "183036095329",
+      appId: "1:183036095329:web:38130dd1cf348703ef3320"
+    };
+
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const database = firebase.database();
+
+    const nameEl = document.getElementById("name");
+    const dobEl = document.getElementById("dob");
+    const stateEl = document.getElementById("state");
+    const districtEl = document.getElementById("district");
+    const localityEl = document.getElementById("locality");
+    const emailEl = document.getElementById("email");
+    const regNumberEl = document.getElementById("regNumber");
+    const pharmacyNameEl = document.getElementById("pharmacyName");
+
+    const dobField = document.getElementById("dobField");
+    const regNumberField = document.getElementById("regNumberField");
+    const pharmacyNameField = document.getElementById("pharmacyNameField");
+
+    // Hide fields initially
+    dobField.style.display = "none";
+    regNumberField.style.display = "none";
+    pharmacyNameField.style.display = "none";
+
+    auth.onAuthStateChanged(user => {
+      if(user){
+        const uid = user.uid;
+        // First check Individual
+        database.ref("users/individuals/" + uid).once("value")
+        .then(snapshot => {
+          if(snapshot.exists()){
+            const data = snapshot.val();
+            nameEl.textContent = data.name;
+            dobEl.textContent = data.dob;
+            dobField.style.display = "block"; // show DOB field for individual
+            stateEl.textContent = data.state;
+            districtEl.textContent = data.district;
+            localityEl.textContent = data.locality;
+            emailEl.textContent = data.email;
+          } else {
+            // Check Pharmacy
+            database.ref("users/pharmacies/" + uid).once("value")
+            .then(snap => {
+              if(snap.exists()){
+                const data = snap.val();
+                pharmacyNameEl.textContent = data.pharmacyName;
+                regNumberEl.textContent = data.regNumber;
+                regNumberField.style.display = "block";
+                pharmacyNameField.style.display = "block";
+                stateEl.textContent = data.state;
+                districtEl.textContent = data.district;
+                localityEl.textContent = data.locality;
+                emailEl.textContent = data.email;
+              } else {
+                alert("User data not found!");
+              }
+            });
+          }
+        });
+      } else {
+        // Not logged in, redirect to login page
+        window.location.href = "login.html";
+      }
+    });
+
+    // Logout button
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      auth.signOut().then(() => {
+        window.location.href = "login.html";
+      });
+    });
+  </script>
+</body>
+</html>
