@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AyuRaksha - Sign Up</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .active-tab { background-color: #14b8a6; color: white; }
+  </style>
+</head>
+<body class="bg-gray-50 flex items-center justify-center min-h-screen">
+
+  <div class="bg-white shadow-lg rounded-lg w-full max-w-2xl p-8">
+    <h1 class="text-2xl font-bold text-center text-teal-600 mb-6">Sign Up for AyuRaksha</h1>
+
+    <!-- Tabs -->
+    <div class="flex justify-center mb-6">
+      <button id="individualTab" class="px-6 py-2 font-semibold rounded-l-lg border active-tab">Individual</button>
+      <button id="pharmacyTab" class="px-6 py-2 font-semibold rounded-r-lg border">Pharmacy</button>
+    </div>
+
+    <!-- Individual Form -->
+    <form id="individualForm" class="space-y-4">
+      <input id="indName" type="text" placeholder="Full Name" class="w-full border p-3 rounded-lg" required>
+      <input id="indDob" type="date" class="w-full border p-3 rounded-lg" required>
+      <input id="indState" type="text" placeholder="State" class="w-full border p-3 rounded-lg" required>
+      <input id="indDistrict" type="text" placeholder="District" class="w-full border p-3 rounded-lg" required>
+      <input id="indLocality" type="text" placeholder="Locality" class="w-full border p-3 rounded-lg" required>
+      <input id="indEmail" type="email" placeholder="Email" class="w-full border p-3 rounded-lg" required>
+      <input id="indPassword" type="password" placeholder="Password" class="w-full border p-3 rounded-lg" required>
+      <input id="indConfirmPassword" type="password" placeholder="Confirm Password" class="w-full border p-3 rounded-lg" required>
+      <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 rounded-lg transition">
+        Sign Up as Individual
+      </button>
+    </form>
+
+    <!-- Pharmacy Form -->
+    <form id="pharmacyForm" class="space-y-4 hidden">
+      <input id="pharmaName" type="text" placeholder="Pharmacy Name" class="w-full border p-3 rounded-lg" required>
+      <input id="pharmaReg" type="text" placeholder="Registration Number" class="w-full border p-3 rounded-lg" required>
+      <input id="pharmaState" type="text" placeholder="State" class="w-full border p-3 rounded-lg" required>
+      <input id="pharmaDistrict" type="text" placeholder="District" class="w-full border p-3 rounded-lg" required>
+      <input id="pharmaLocality" type="text" placeholder="Locality" class="w-full border p-3 rounded-lg" required>
+      <input id="pharmaEmail" type="email" placeholder="Email" class="w-full border p-3 rounded-lg" required>
+      <input id="pharmaPassword" type="password" placeholder="Password" class="w-full border p-3 rounded-lg" required>
+      <input id="pharmaConfirmPassword" type="password" placeholder="Confirm Password" class="w-full border p-3 rounded-lg" required>
+      <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 rounded-lg transition">
+        Sign Up as Pharmacy
+      </button>
+    </form>
+  </div>
+
+  <!-- Firebase SDK v8 -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBNtALT9E9wJWua8SHD16bxiom_UXnnZpU",
+      authDomain: "ayuraksha-467a7.firebaseapp.com",
+      projectId: "ayuraksha-467a7",
+      storageBucket: "ayuraksha-467a7.firebasestorage.app",
+      messagingSenderId: "183036095329",
+      appId: "1:183036095329:web:38130dd1cf348703ef3320"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const database = firebase.database();
+
+    // Tabs
+    const individualTab = document.getElementById("individualTab");
+    const pharmacyTab = document.getElementById("pharmacyTab");
+    const individualForm = document.getElementById("individualForm");
+    const pharmacyForm = document.getElementById("pharmacyForm");
+
+    individualTab.addEventListener("click", () => {
+      individualTab.classList.add("active-tab");
+      pharmacyTab.classList.remove("active-tab");
+      individualForm.classList.remove("hidden");
+      pharmacyForm.classList.add("hidden");
+    });
+
+    pharmacyTab.addEventListener("click", () => {
+      pharmacyTab.classList.add("active-tab");
+      individualTab.classList.remove("active-tab");
+      pharmacyForm.classList.remove("hidden");
+      individualForm.classList.add("hidden");
+    });
+
+    // Individual Signup
+    individualForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("indEmail").value;
+      const password = document.getElementById("indPassword").value;
+      const confirmPassword = document.getElementById("indConfirmPassword").value;
+
+      if(password !== confirmPassword){
+        alert("Passwords do not match!");
+        return;
+      }
+
+      auth.createUserWithEmailAndPassword(email, password)
+        .then(userCred => {
+          const uid = userCred.user.uid;
+          database.ref("users/individuals/" + uid).set({
+            name: document.getElementById("indName").value,
+            dob: document.getElementById("indDob").value,
+            state: document.getElementById("indState").value,
+            district: document.getElementById("indDistrict").value,
+            locality: document.getElementById("indLocality").value,
+            email: email
+          });
+          alert("Individual account created!");
+          individualForm.reset();
+          window.location.href = "login.html";
+        })
+        .catch(err => alert(err.message));
+    });
+
+    // Pharmacy Signup
+    pharmacyForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("pharmaEmail").value;
+      const password = document.getElementById("pharmaPassword").value;
+      const confirmPassword = document.getElementById("pharmaConfirmPassword").value;
+
+      if(password !== confirmPassword){
+        alert("Passwords do not match!");
+        return;
+      }
+
+      auth.createUserWithEmailAndPassword(email, password)
+        .then(userCred => {
+          const uid = userCred.user.uid;
+          database.ref("users/pharmacies/" + uid).set({
+            pharmacyName: document.getElementById("pharmaName").value,
+            regNumber: document.getElementById("pharmaReg").value,
+            state: document.getElementById("pharmaState").value,
+            district: document.getElementById("pharmaDistrict").value,
+            locality: document.getElementById("pharmaLocality").value,
+            email: email
+          });
+          alert("Pharmacy account created!");
+          pharmacyForm.reset();
+          window.location.href = "login.html";
+        })
+        .catch(err => alert(err.message));
+    });
+  </script>
+</body>
+</html>
