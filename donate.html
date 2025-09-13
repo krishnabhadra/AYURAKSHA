@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Donate Medicine - AyuRaksha</title>
+  <link rel="stylesheet" href="donate.css">
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    // Import Firebase SDK
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+    // ✅ Replace with your Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyBNtALT9E9wJWua8SHD16bxiom_UXnnZpU",
+      authDomain: "ayuraksha-467a7.firebaseapp.com",
+      projectId: "ayuraksha-467a7",
+      storageBucket: "ayuraksha-467a7.firebasestorage.app",
+      messagingSenderId: "183036095329",
+      appId: "1:183036095329:web:38130dd1cf348703ef3320"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+
+    async function donateMedicine(event) {
+      event.preventDefault();
+
+      const name = document.getElementById("medicineName").value;
+      const expiry = document.getElementById("expiryDate").value;
+      const dosage = document.getElementById("dosage").value;
+      const quantity = document.getElementById("quantity").value;
+      const photoFile = document.getElementById("photo").files[0];
+
+      let photoURL = "";
+
+      if (photoFile) {
+        const storageRef = ref(storage, "medicines/" + photoFile.name);
+        await uploadBytes(storageRef, photoFile);
+        photoURL = await getDownloadURL(storageRef);
+      }
+
+      try {
+        await addDoc(collection(db, "donations"), {
+          name,
+          expiry,
+          dosage,
+          quantity,
+          photoURL,
+          timestamp: new Date()
+        });
+        alert("✅ Medicine donated successfully!");
+        document.getElementById("donateForm").reset();
+      } catch (error) {
+        console.error("Error adding document: ", error);
+        alert("❌ Failed to donate medicine.");
+      }
+    }
+
+    window.donateMedicine = donateMedicine;
+  </script>
+</head>
+<body>
+  <div class="donate-container">
+    <h2>Donate Medicine</h2>
+    <form id="donateForm" onsubmit="donateMedicine(event)">
+      <input type="text" id="medicineName" placeholder="Medicine Name" required>
+      <input type="date" id="expiryDate" required>
+      <input type="text" id="dosage" placeholder="Dosage (e.g. 500mg)" required>
+      <input type="number" id="quantity" placeholder="Quantity" required>
+      <input type="file" id="photo" accept="image/*">
+      <button type="submit">Donate</button>
+    </form>
+  </div>
+</body>
+</html>
