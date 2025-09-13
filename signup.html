@@ -15,6 +15,9 @@
   <div class="bg-white shadow-lg rounded-lg w-full max-w-2xl p-8">
     <h1 class="text-2xl font-bold text-center text-teal-600 mb-6">Sign Up for AyuRaksha</h1>
 
+    <!-- Message Div -->
+    <div id="message" class="text-center text-green-600 font-bold mb-4"></div>
+
     <!-- Tabs -->
     <div class="flex justify-center mb-6">
       <button id="individualTab" class="px-6 py-2 font-semibold rounded-l-lg border active-tab">Individual</button>
@@ -52,38 +55,41 @@
     </form>
   </div>
 
-  <!-- Firebase SDK v8 -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script type="module">
+    // Firebase SDK
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-  <script>
-    // Firebase Config
+    // Firebase Config with your Realtime Database URL
     const firebaseConfig = {
       apiKey: "AIzaSyBNtALT9E9wJWua8SHD16bxiom_UXnnZpU",
       authDomain: "ayuraksha-467a7.firebaseapp.com",
       projectId: "ayuraksha-467a7",
-      storageBucket: "ayuraksha-467a7.firebasestorage.app",
+      storageBucket: "ayuraksha-467a7.appspot.com",
       messagingSenderId: "183036095329",
       appId: "1:183036095329:web:38130dd1cf348703ef3320",
-      databaseURL: "https://ayuraksha-467a7-default-rtdb.firebaseio.com/" // Make sure databaseURL is correct
+      databaseURL: "https://ayuraksha-467a7-default-rtdb.firebaseio.com/"
     };
 
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const database = firebase.database();
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const database = getDatabase(app);
 
-    // Tabs toggle
+    // Elements
     const individualTab = document.getElementById("individualTab");
     const pharmacyTab = document.getElementById("pharmacyTab");
     const individualForm = document.getElementById("individualForm");
     const pharmacyForm = document.getElementById("pharmacyForm");
+    const messageDiv = document.getElementById("message");
 
+    // Tab Toggle
     individualTab.addEventListener("click", () => {
       individualTab.classList.add("active-tab");
       pharmacyTab.classList.remove("active-tab");
       individualForm.classList.remove("hidden");
       pharmacyForm.classList.add("hidden");
+      messageDiv.textContent = "";
     });
 
     pharmacyTab.addEventListener("click", () => {
@@ -91,6 +97,7 @@
       individualTab.classList.remove("active-tab");
       pharmacyForm.classList.remove("hidden");
       individualForm.classList.add("hidden");
+      messageDiv.textContent = "";
     });
 
     // Individual Signup
@@ -101,15 +108,15 @@
       const confirmPassword = document.getElementById("indConfirmPassword").value;
 
       if(password !== confirmPassword){
-        alert("Passwords do not match!");
+        messageDiv.textContent = "Passwords do not match!";
+        messageDiv.classList.add("text-red-600");
         return;
       }
 
-      auth.createUserWithEmailAndPassword(email, password)
+      createUserWithEmailAndPassword(auth, email, password)
         .then(userCred => {
           const uid = userCred.user.uid;
-          // Save in Realtime Database
-          return database.ref("users/individuals/" + uid).set({
+          return set(ref(database, "users/individuals/" + uid), {
             name: document.getElementById("indName").value,
             dob: document.getElementById("indDob").value,
             country: "India",
@@ -120,11 +127,16 @@
           });
         })
         .then(() => {
-          alert("Individual account created successfully!");
+          messageDiv.classList.remove("text-red-600");
+          messageDiv.classList.add("text-green-600");
+          messageDiv.textContent = "Individual profile created successfully! Redirecting to login...";
           individualForm.reset();
-          window.location.href = "login.html";
+          setTimeout(() => { window.location.href = "login.html"; }, 2000);
         })
-        .catch(err => alert("Error: " + err.message));
+        .catch(err => {
+          messageDiv.textContent = "Error: " + err.message;
+          messageDiv.classList.add("text-red-600");
+        });
     });
 
     // Pharmacy Signup
@@ -135,14 +147,15 @@
       const confirmPassword = document.getElementById("pharmaConfirmPassword").value;
 
       if(password !== confirmPassword){
-        alert("Passwords do not match!");
+        messageDiv.textContent = "Passwords do not match!";
+        messageDiv.classList.add("text-red-600");
         return;
       }
 
-      auth.createUserWithEmailAndPassword(email, password)
+      createUserWithEmailAndPassword(auth, email, password)
         .then(userCred => {
           const uid = userCred.user.uid;
-          return database.ref("users/pharmacies/" + uid).set({
+          return set(ref(database, "users/pharmacies/" + uid), {
             pharmacyName: document.getElementById("pharmaName").value,
             regNumber: document.getElementById("pharmaReg").value,
             country: "India",
@@ -153,13 +166,17 @@
           });
         })
         .then(() => {
-          alert("Pharmacy account created successfully!");
+          messageDiv.classList.remove("text-red-600");
+          messageDiv.classList.add("text-green-600");
+          messageDiv.textContent = "Pharmacy profile created successfully! Redirecting to login...";
           pharmacyForm.reset();
-          window.location.href = "login.html";
+          setTimeout(() => { window.location.href = "login.html"; }, 2000);
         })
-        .catch(err => alert("Error: " + err.message));
+        .catch(err => {
+          messageDiv.textContent = "Error: " + err.message;
+          messageDiv.classList.add("text-red-600");
+        });
     });
   </script>
-
 </body>
 </html>
