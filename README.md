@@ -21,5 +21,7 @@ The project is built using a modern and lightweight tech stack. The frontend is 
 
 To run the project, start by cloning the repository from GitHub:
 
+https://spiffy-mousse-9a3ebe.netlify.app/
+
 git clone https://github.com/krishnabhadra/AYURAKSHA.git
 cd ayuraksha
