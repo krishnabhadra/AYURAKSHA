@@ -28,7 +28,7 @@
       <input id="indState" type="text" placeholder="State" class="w-full border p-3 rounded-lg" required>
       <input id="indDistrict" type="text" placeholder="District" class="w-full border p-3 rounded-lg" required>
       <input id="indLocality" type="text" placeholder="Locality" class="w-full border p-3 rounded-lg" required>
-      <input id="indEmail" type="email" placeholder="Email" class="w-full border p-3 rounded-lg" required>
+      <input id="indEmail" type="email" placeholder="Email (Username)" class="w-full border p-3 rounded-lg" required>
       <input id="indPassword" type="password" placeholder="Password" class="w-full border p-3 rounded-lg" required>
       <input id="indConfirmPassword" type="password" placeholder="Confirm Password" class="w-full border p-3 rounded-lg" required>
       <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 rounded-lg transition">
@@ -43,7 +43,7 @@
       <input id="pharmaState" type="text" placeholder="State" class="w-full border p-3 rounded-lg" required>
       <input id="pharmaDistrict" type="text" placeholder="District" class="w-full border p-3 rounded-lg" required>
       <input id="pharmaLocality" type="text" placeholder="Locality" class="w-full border p-3 rounded-lg" required>
-      <input id="pharmaEmail" type="email" placeholder="Email" class="w-full border p-3 rounded-lg" required>
+      <input id="pharmaEmail" type="email" placeholder="Email (Username)" class="w-full border p-3 rounded-lg" required>
       <input id="pharmaPassword" type="password" placeholder="Password" class="w-full border p-3 rounded-lg" required>
       <input id="pharmaConfirmPassword" type="password" placeholder="Confirm Password" class="w-full border p-3 rounded-lg" required>
       <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 rounded-lg transition">
@@ -58,20 +58,22 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
   <script>
+    // Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyBNtALT9E9wJWua8SHD16bxiom_UXnnZpU",
       authDomain: "ayuraksha-467a7.firebaseapp.com",
       projectId: "ayuraksha-467a7",
       storageBucket: "ayuraksha-467a7.firebasestorage.app",
       messagingSenderId: "183036095329",
-      appId: "1:183036095329:web:38130dd1cf348703ef3320"
+      appId: "1:183036095329:web:38130dd1cf348703ef3320",
+      databaseURL: "https://ayuraksha-467a7-default-rtdb.firebaseio.com/" // Make sure databaseURL is correct
     };
 
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const database = firebase.database();
 
-    // Tabs
+    // Tabs toggle
     const individualTab = document.getElementById("individualTab");
     const pharmacyTab = document.getElementById("pharmacyTab");
     const individualForm = document.getElementById("individualForm");
@@ -106,19 +108,23 @@
       auth.createUserWithEmailAndPassword(email, password)
         .then(userCred => {
           const uid = userCred.user.uid;
-          database.ref("users/individuals/" + uid).set({
+          // Save in Realtime Database
+          return database.ref("users/individuals/" + uid).set({
             name: document.getElementById("indName").value,
             dob: document.getElementById("indDob").value,
+            country: "India",
             state: document.getElementById("indState").value,
             district: document.getElementById("indDistrict").value,
             locality: document.getElementById("indLocality").value,
             email: email
           });
-          alert("Individual account created!");
+        })
+        .then(() => {
+          alert("Individual account created successfully!");
           individualForm.reset();
           window.location.href = "login.html";
         })
-        .catch(err => alert(err.message));
+        .catch(err => alert("Error: " + err.message));
     });
 
     // Pharmacy Signup
@@ -136,20 +142,24 @@
       auth.createUserWithEmailAndPassword(email, password)
         .then(userCred => {
           const uid = userCred.user.uid;
-          database.ref("users/pharmacies/" + uid).set({
+          return database.ref("users/pharmacies/" + uid).set({
             pharmacyName: document.getElementById("pharmaName").value,
             regNumber: document.getElementById("pharmaReg").value,
+            country: "India",
             state: document.getElementById("pharmaState").value,
             district: document.getElementById("pharmaDistrict").value,
             locality: document.getElementById("pharmaLocality").value,
             email: email
           });
-          alert("Pharmacy account created!");
+        })
+        .then(() => {
+          alert("Pharmacy account created successfully!");
           pharmacyForm.reset();
           window.location.href = "login.html";
         })
-        .catch(err => alert(err.message));
+        .catch(err => alert("Error: " + err.message));
     });
   </script>
+
 </body>
 </html>
